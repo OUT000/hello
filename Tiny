@@ -1,0 +1,74 @@
+以下是Tiny语言的定义。
+
+Tiny语言的词典定义如下：
+关键字：  WRITE READ IF ELSE RETURN BEGIN END MAIN STRING INT REAL
+单字符分隔符：  ;  ,  (   )
+单字符运算符：+  -  *   /
+多字符运算符：:=  ==   !=
+标识符：标识符由一个字母后跟任意数量的字母或数字组成。以下是标识符的示例：x、x2、xx2、x2x、End、END2。请注意，End 是一个标识符，而 END 是一个关键字。以下不是标识符：
+IF, WRITE, READ, ....（关键字不计为标识符）
+2x （标识符不能以数字开头）
+注释中的字符串不是标识符。
+数字是一个数字序列，或数字序列，后跟一个点，后跟数字。
+Number -> Digits | Digits '.' Digits
+Digits -> Digit | Digit Digits
+Digit  -> '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+注释：/** 和 **/ 之间的字符串。注释的长度可以超过一行。
+EBNF 语法
+高级计划结构
+Program -> MethodDecl MethodDecl* 
+Type -> INT | REAL |STRING 
+MethodDecl -> Type [MAIN] Id '(' FormalParams ')' Block
+FormalParams -> [FormalParam ( ',' FormalParam )* ]
+FormalParam -> Type Id
+
+语句
+Block -> BEGIN Statement+ END
+
+Statement -> Block
+           | LocalVarDecl  
+           | AssignStmt   
+           | ReturnStmt
+           | IfStmt
+	   | WriteStmt
+	   | ReadStmt
+        
+LocalVarDecl -> Type Id ';' | Type AssignStmt  
+
+AssignStmt  -> Id := Expression ';'
+           |  Id := QString ';'
+ReturnStmt -> RETURN Expression ';'
+IfStmt    -> IF '(' BoolExpression ')' Statement
+            | IF '(' BoolExpression ')' Statement ELSE Statement
+WriteStmt -> WRITE '(' Expression ',' QString ')' ';'
+ReadStmt  -> READ '(' Id ',' QString ')' ';'
+QString is any sequence of characters except double quote itself, enclosed in double quotes.
+表达 式
+Expression -> MultiplicativeExpr  (( '+' | '-' ) MultiplicativeExpr)*
+MultiplicativeExpr -> PrimaryExpr (( '*' | '/' ) PrimaryExpr)*
+PrimaryExpr -> Num  // Integer or Real numbers
+             | Id            
+             | '(' Expression ')'
+             | Id '(' ActualParams ')'
+BoolExpression -> Expression '==' Expression 
+                 |Expression '!=' Expression   
+ActualParams -> [Expression ( ',' Expression)*]
+
+示例程序
+ /** this is a comment line in the sample program **/
+ INT f2(INT x, INT y ) 
+ BEGIN 
+    INT z;
+    z := x*x - y*y;
+    RETURN z; 
+ END 
+ INT MAIN f1() 
+ BEGIN
+    INT x;
+    READ(x, "A41.input");
+    INT y;
+    READ(y, "A42.input");
+    INT z;
+    z := f2(x,y) + f2(y,x);
+    WRITE (z, "A4.output"); 
+ END
